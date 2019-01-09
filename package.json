@@ -5,12 +5,16 @@
   "license": "MIT",
   "dependencies": {
     "apollo-server-express": "^2.3.1",
+    "bcryptjs": "^2.4.3",
     "express": "^4.16.4",
     "graphql": "^14.0.2",
+    "pg": "^7.7.1",
     "reflect-metadata": "^0.1.12",
-    "type-graphql": "^0.16.0"
+    "type-graphql": "^0.16.0",
+    "typeorm": "^0.2.11"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.2",
     "@types/express": "^4.16.0",
     "@types/graphql": "^14.0.4",
     "@types/node": "^10.12.18",
