@@ -28,15 +28,20 @@
     "@types/express-session": "^1.15.11",
     "@types/graphql": "^14.0.4",
     "@types/ioredis": "^4.0.4",
+    "@types/jest": "^23.3.12",
     "@types/node": "^10.12.18",
     "@types/nodemailer": "^4.6.5",
     "@types/uuid": "^3.4.4",
+    "jest": "^23.6.0",
     "nodemon": "^1.18.9",
+    "ts-jest": "^23.10.5",
     "ts-node": "^7.0.1",
     "ts-node-dev": "^1.0.0-pre.32",
     "typescript": "^3.2.2"
   },
   "scripts": {
-    "start": "ts-node-dev --respawn src/index.ts"
+    "start": "ts-node-dev --respawn src/index.ts",
+    "db:setup": "ts-node ./src/test-utils/setup.ts",
+    "test": "npm run db:setup && jest"
   }
 }
