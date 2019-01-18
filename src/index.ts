@@ -1,18 +1,19 @@
-import "reflect-metadata";
 import { ApolloServer } from "apollo-server-express";
-import Express from "express";
-import { formatArgumentValidationError } from "type-graphql";
-import { createConnection } from "typeorm";
-import session from "express-session";
 import connectRedis from "connect-redis";
 import cors from "cors";
-
+import Express from "express";
+import session from "express-session";
+import "reflect-metadata";
+import { formatArgumentValidationError } from "type-graphql";
+import { createConnection } from "typeorm";
 import { redis } from "./redis";
+// @ts-ignore
 import { createSchema } from "./utils/createSchema";
 
 const main = async () => {
   await createConnection();
 
+  // @ts-ignore
   const schema = await createSchema();
 
   const apolloServer = new ApolloServer({

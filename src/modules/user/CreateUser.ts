@@ -1,16 +1,16 @@
 import {
-  Resolver,
-  Mutation,
   Arg,
   ClassType,
-  InputType,
   Field,
+  InputType,
+  Mutation,
+  Resolver,
   UseMiddleware
 } from "type-graphql";
-import { RegisterInput } from "./register/RegisterInput";
-import { User } from "../../entity/User";
-import { Product } from "../../entity/Product";
 import { Middleware } from "type-graphql/interfaces/Middleware";
+import { Product } from "../../entity/Product";
+import { User } from "../../entity/User";
+import { RegisterInput } from "./register/RegisterInput";
 
 function createResolver<T extends ClassType, X extends ClassType>(
   suffix: string,
