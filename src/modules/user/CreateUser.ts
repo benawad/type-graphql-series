@@ -5,25 +5,28 @@ import {
   ClassType,
   InputType,
   Field,
-  UseMiddleware
+  Authorized
 } from "type-graphql";
 import { RegisterInput } from "./register/RegisterInput";
 import { User } from "../../entity/User";
 import { Product } from "../../entity/Product";
-import { Middleware } from "type-graphql/interfaces/Middleware";
 
 function createResolver<T extends ClassType, X extends ClassType>(
   suffix: string,
   returnType: T,
   inputType: X,
   entity: any,
-  middleware?: Middleware<any>[]
+  decorator: any
 ) {
+  const decoratorFactory = (deco: any): any => {
+    return deco();
+  };
+
   @Resolver()
   class BaseResolver {
     @Mutation(() => returnType, { name: `create${suffix}` })
-    @UseMiddleware(...(middleware || []))
-    async create(@Arg("data", () => inputType) data: any) {
+    @decoratorFactory(decorator)
+    create(@Arg("data", () => inputType) data: any) {
       return entity.create(data).save();
     }
   }
@@ -41,11 +44,13 @@ export const CreateUserResolver = createResolver(
   "User",
   User,
   RegisterInput,
-  User
+  User,
+  Authorized
 );
 export const CreateProductResolver = createResolver(
   "Product",
   Product,
   ProductInput,
-  Product
+  Product,
+  Authorized
 );
