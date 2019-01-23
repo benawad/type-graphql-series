@@ -1,22 +1,37 @@
-import { Resolver, Mutation, Arg, ClassType, Query } from "type-graphql";
-import { RegisterInput } from "./register/RegisterInput";
+import { Arg, ClassType, Mutation, Query, Resolver } from "type-graphql";
 import { User } from "../../entity/User";
+import { RegisterInput } from "./register/RegisterInput";
 
-const methodList: {
-  createM: (data: any) => void;
-  deleteM: (data: any) => void;
-} = {
-  createM: (data: any) => {
-    console.log("create data: ", data);
+const methodList = {
+  query: {
+    genre: Query,
+    list: {
+      findAll: (data: any) => {
+        console.log("query findAll data: ", data);
+      },
+      findOne: (data: any) => {
+        console.log("query findOne data: ", data);
+      }
+    }
   },
-  deleteM: (data: any) => {
-    console.log("delete data: ", data);
+  mutation: {
+    genre: Mutation,
+    list: {
+      createM: (data: any) => {
+        console.log("mutation create data: ", data);
+      },
+      deleteM: (data: any) => {
+        console.log("mutation delete data: ", data);
+      }
+    }
   }
 };
 
 // @ts-ignore
 interface BaseResolver {
+  // @ts-ignore
   createM?: typeof methodList.createM;
+  // @ts-ignore
   deleteM?: typeof methodList.deleteM;
   [key: string]: any;
 }
@@ -27,7 +42,7 @@ function createResolver<T extends ClassType, X extends ClassType>(
   returnType: T,
   inputType: X,
   entity: any,
-  methods: any[]
+  operations: any[]
 ): any {
   function classDecorator(): any {
     return function(
@@ -35,26 +50,26 @@ function createResolver<T extends ClassType, X extends ClassType>(
       propertyKey: string,
       descriptor: PropertyDescriptor
     ) {
-      methods.forEach(method => {
+      operations.forEach(oper => {
         // @ts-ignore
-        target.prototype[method] = methodList[method];
-        const targetMethod = target.prototype[method];
-        const targetPrototype = target.prototype;
-        const methodKey = Object.keys(targetPrototype).find(
-          key => targetPrototype[key] === targetMethod
-        );
+        const deco = methodList[oper.genre].genre;
         // @ts-ignore
-        Query(() => User, { nullable: true })(
-          targetPrototype,
+        oper.meth.forEach(method => {
           // @ts-ignore
-          methodKey,
-          {
-            value: targetMethod,
-            writable: true,
-            enumerable: false,
-            configurable: true
-          }
-        );
+          target.prototype[method] = methodList[oper.genre].list[method];
+          //const targetMethod = target.prototype[method];
+          const targetPrototype = target.prototype;
+          const methodKey = method;
+          // @ts-ignore
+          deco(() => returnType, {
+            name: `${method}${suffix}`,
+            nullable: true
+          })(
+            targetPrototype,
+            // @ts-ignore
+            methodKey
+          );
+        });
       });
       console.log("target: ", target);
       console.log("propertyKey: ", propertyKey);
@@ -88,5 +103,26 @@ export const CreateUserResolver = createResolver(
   User,
   RegisterInput,
   User,
-  ["createM", "deleteM"]
+  [{ genre: "query", meth: ["findAll", "findOne"] }]
 );
+
+/*
+ *  List of type-graphql decorators and their needed parameters:
+ *    ParameterDecorator: prototype, propertyKey, parameterIndex
+ *      Arg, Args, Ctx, Info, PubSub, Root,
+ *
+ *    ClassDecorator: target
+ *      ArgsType, InputType, InterfaceType, ObjectType, Resolver,
+ *
+ *    MethodAndPropDecorator: prototype, propertyKey, descriptor
+ *      Authorized, Field,
+ *
+ *    MethodDecorator: prototype, propertyKey/methodName
+ *      FieldResolver, Mutation, Query, Subscription,
+ *
+ *    UseMiddleware can be: MethodAndPropDecorator, MethodDecorator , PropertyDecorator
+ *
+ *    registerEnumType accepts enumObj and EnumConfig
+ *    createUnionType to be seen better
+ *
+ */
