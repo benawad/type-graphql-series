@@ -1,17 +1,17 @@
-import "reflect-metadata";
 import { ApolloServer } from "apollo-server-express";
-import Express from "express";
-import { formatArgumentValidationError } from "type-graphql";
-import { createConnection } from "typeorm";
-import session from "express-session";
 import connectRedis from "connect-redis";
 import cors from "cors";
+import Express from "express";
+import session from "express-session";
 import queryComplexity, {
   fieldConfigEstimator,
   simpleEstimator
 } from "graphql-query-complexity";
-
+import "reflect-metadata";
+import { formatArgumentValidationError } from "type-graphql";
+import { createConnection } from "typeorm";
 import { redis } from "./redis";
+import { createAuthorsLoader } from "./utils/authorsLoader";
 import { createSchema } from "./utils/createSchema";
 
 const main = async () => {
@@ -22,7 +22,11 @@ const main = async () => {
   const apolloServer = new ApolloServer({
     schema,
     formatError: formatArgumentValidationError,
-    context: ({ req, res }: any) => ({ req, res }),
+    context: ({ req, res }: any) => ({
+      req,
+      res,
+      authorsLoader: createAuthorsLoader()
+    }),
     validationRules: [
       queryComplexity({
         // The maximum allowed query complexity, queries above this threshold will be rejected
@@ -84,4 +88,4 @@ const main = async () => {
   });
 };
 
-main();
+main().catch(err => console.error(err));
