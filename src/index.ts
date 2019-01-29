@@ -3,10 +3,6 @@ import connectRedis from "connect-redis";
 import cors from "cors";
 import Express from "express";
 import session from "express-session";
-import queryComplexity, {
-  fieldConfigEstimator,
-  simpleEstimator
-} from "graphql-query-complexity";
 import "reflect-metadata";
 import { formatArgumentValidationError } from "type-graphql";
 import { createConnection } from "typeorm";
@@ -28,28 +24,28 @@ const main = async () => {
       authorsLoader: createAuthorsLoader()
     }),
     validationRules: [
-      queryComplexity({
-        // The maximum allowed query complexity, queries above this threshold will be rejected
-        maximumComplexity: 8,
-        // The query variables. This is needed because the variables are not available
-        // in the visitor of the graphql-js library
-        variables: {},
-        // Optional callback function to retrieve the determined query complexity
-        // Will be invoked weather the query is rejected or not
-        // This can be used for logging or to implement rate limiting
-        onComplete: (complexity: number) => {
-          console.log("Query Complexity:", complexity);
-        },
-        estimators: [
-          // Using fieldConfigEstimator is mandatory to make it work with type-graphql
-          fieldConfigEstimator(),
-          // This will assign each field a complexity of 1 if no other estimator
-          // returned a value. We can define the default value for field not explicitly annotated
-          simpleEstimator({
-            defaultComplexity: 1
-          })
-        ]
-      }) as any
+      // queryComplexity({
+      //   // The maximum allowed query complexity, queries above this threshold will be rejected
+      //   maximumComplexity: 8,
+      //   // The query variables. This is needed because the variables are not available
+      //   // in the visitor of the graphql-js library
+      //   variables: {},
+      //   // Optional callback function to retrieve the determined query complexity
+      //   // Will be invoked weather the query is rejected or not
+      //   // This can be used for logging or to implement rate limiting
+      //   onComplete: (complexity: number) => {
+      //     console.log("Query Complexity:", complexity);
+      //   },
+      //   estimators: [
+      //     // Using fieldConfigEstimator is mandatory to make it work with type-graphql
+      //     fieldConfigEstimator(),
+      //     // This will assign each field a complexity of 1 if no other estimator
+      //     // returned a value. We can define the default value for field not explicitly annotated
+      //     simpleEstimator({
+      //       defaultComplexity: 1
+      //     })
+      //   ]
+      // }) as any
     ]
   });
 
@@ -81,7 +77,7 @@ const main = async () => {
     })
   );
 
-  apolloServer.applyMiddleware({ app });
+  apolloServer.applyMiddleware({ app, cors: false });
 
   app.listen(4000, () => {
     console.log("server started on http://localhost:4000/graphql");
