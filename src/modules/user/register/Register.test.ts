@@ -1,9 +1,8 @@
-import { Connection } from "typeorm";
 import faker from "faker";
-
-import { testConn } from "../../../test-utils/testConn";
-import { gCall } from "../../../test-utils/gCall";
+import { Connection } from "typeorm";
 import { User } from "../../../entity/User";
+import { gCall } from "../../../test-utils/gCall";
+import { testConn } from "../../../test-utils/testConn";
 
 let conn: Connection;
 beforeAll(async () => {
@@ -28,7 +27,7 @@ mutation Register($data: RegisterInput!) {
 `;
 
 describe("Register", () => {
-  it("create user", async () => {
+  it.only("create user", async () => {
     const user = {
       firstName: faker.name.firstName(),
       lastName: faker.name.lastName(),
@@ -42,6 +41,10 @@ describe("Register", () => {
         data: user
       }
     });
+
+    if (response.errors) {
+      console.log(response.errors[0].originalError);
+    }
 
     expect(response).toMatchObject({
       data: {
