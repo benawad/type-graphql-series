@@ -4,11 +4,16 @@ import cors from "cors";
 import Express from "express";
 import session from "express-session";
 import "reflect-metadata";
-import { formatArgumentValidationError } from "type-graphql";
+import { formatArgumentValidationError, useContainer } from "type-graphql";
+import { Container } from "typedi";
+import * as typeorm from "typeorm";
 import { createConnection } from "typeorm";
 import { redis } from "./redis";
 import { createAuthorsLoader } from "./utils/authorsLoader";
 import { createSchema } from "./utils/createSchema";
+
+useContainer(Container);
+typeorm.useContainer(Container);
 
 const main = async () => {
   await createConnection();
