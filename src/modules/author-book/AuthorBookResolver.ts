@@ -2,11 +2,13 @@ import { Arg, Int, Mutation, Query, Resolver } from "type-graphql";
 import { Author } from "../../entity/Author";
 import { AuthorBook } from "../../entity/AuthorBook";
 import { Book } from "../../entity/Book";
+import { getConnection } from "typeorm";
 
 @Resolver()
 export class AuthorBookResolver {
   @Mutation(() => Book)
   async createBook(@Arg("name") name: string) {
+    await getConnection().queryResultCache!.remove(["book:find"]);
     return Book.create({ name }).save();
   }
 
@@ -33,6 +35,19 @@ export class AuthorBookResolver {
 
   @Query(() => [Book])
   async books() {
-    return Book.find();
+    // return getConnection()
+    //   .getRepository(Book)
+    //   .createQueryBuilder("book")
+    //   .select("book.id")
+    //   .addSelect("book.name")
+    //   .addSelect("pg_sleep(3)")
+    //   .leftJoinAndSelect("book.authorConnection", "author")
+    //   .cache(true)
+    //   .getMany();
+    return Book.find({
+      // cache: { id: "book:find", milliseconds: 50000 },
+      cache: true,
+      relations: ["authorConnection", "authorConnection.author"]
+    });
   }
 }

@@ -8,5 +8,6 @@
   "database": "typegraphql-example",
   "synchronize": true,
   "logging": true,
+  "cache": { "type": "redis", "duration": 10000 },
   "entities": ["src/entity/*.*"]
 }

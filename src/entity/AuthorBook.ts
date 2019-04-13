@@ -7,7 +7,9 @@ import {
 } from "typeorm";
 import { Author } from "./Author";
 import { Book } from "./Book";
+import { ObjectType, Field } from "type-graphql";
 
+@ObjectType()
 @Entity()
 export class AuthorBook extends BaseEntity {
   @PrimaryColumn()
@@ -16,6 +18,7 @@ export class AuthorBook extends BaseEntity {
   @PrimaryColumn()
   bookId: number;
 
+  @Field(() => Author)
   @ManyToOne(() => Author, author => author.bookConnection, {
     onDelete: "CASCADE"
   })

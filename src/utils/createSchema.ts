@@ -13,9 +13,11 @@ import { LogoutResolver } from "../modules/user/Logout";
 import { MeResolver } from "../modules/user/Me";
 import { ProfilePictureResolver } from "../modules/user/ProfilePicture";
 import { RegisterResolver } from "../modules/user/Register";
+import { Container } from "typedi";
 
 export const createSchema = () =>
   buildSchema({
+    container: Container,
     resolvers: [
       ChangePasswordResolver,
       ConfirmUserResolver,

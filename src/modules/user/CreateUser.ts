@@ -10,7 +10,7 @@ import {
 import { RegisterInput } from "./register/RegisterInput";
 import { User } from "../../entity/User";
 import { Product } from "../../entity/Product";
-import { Middleware } from "type-graphql/interfaces/Middleware";
+import { Middleware } from "type-graphql/dist/interfaces/Middleware";
 
 function createResolver<T extends ClassType, X extends ClassType>(
   suffix: string,

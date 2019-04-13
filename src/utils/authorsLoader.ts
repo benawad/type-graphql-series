@@ -13,7 +13,8 @@ const batchAuthors = async (bookIds: number[]) => {
     },
     where: {
       bookId: In(bookIds)
-    }
+    },
+    cache: true
   });
 
   const bookIdToAuthors: { [key: number]: Author[] } = {};
@@ -33,7 +34,7 @@ const batchAuthors = async (bookIds: number[]) => {
     }
   });
 
-  return bookIds.map(bookId => bookIdToAuthors[bookId]);
+  return bookIds.map(bookId => bookIdToAuthors[bookId] || []);
 };
 
 export const createAuthorsLoader = () => new DataLoader(batchAuthors);
