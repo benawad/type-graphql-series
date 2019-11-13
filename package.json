@@ -45,7 +45,7 @@
   },
   "scripts": {
     "start": "ts-node-dev --respawn --transpile-only src/index.ts",
-    "db:setup": "ts-node ./src/test-utils/setup.ts",
+    "db:setup": "ts-node --transpile-only ./src/test-utils/setup.ts",
     "test": "npm run db:setup && jest"
   }
 }
