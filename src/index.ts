@@ -19,7 +19,7 @@ const main = async () => {
   const apolloServer = new ApolloServer({ schema });
 
   const app = Express();
-
+  await apolloServer.start();
   apolloServer.applyMiddleware({ app });
 
   app.listen(4000, () => {
