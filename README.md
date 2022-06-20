@@ -4,7 +4,7 @@ Code for: https://www.youtube.com/playlist?list=PLN3n1USn4xlma1bBu3Tloe4NyYn9Ko8
 
 # Installing
 
-1. Clone and install dependecies
+1. Clone and install dependencies
 ```
 git clone https://github.com/benawad/type-graphql-series.git
 cd type-graphql-series
@@ -29,3 +29,4 @@ yarn start
 To verified it worked, you can go to http://localhost:4000
 
 If you need any help setting this up feel free to message me on Discord: https://discord.gg/Vehs99V
+
